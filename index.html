@@ -1,1 +1,277 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>Taki-Info Business</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f3f5f9;color:#172033;font-family:Tahoma,Arial,sans-serif}
+header{background:#101827;color:white;padding:20px}
+.brand{font-size:23px;font-weight:bold}
+.brand span{color:#43c6a5}
+header p{color:#b7c3d5;font-size:13px;margin-bottom:0}
+.layout{display:flex;min-height:calc(100vh - 90px)}
+nav{width:230px;background:#182437;padding:18px 12px;color:white}
+nav button{width:100%;text-align:right;background:transparent;color:#d6deeb;border:0;padding:14px 12px;border-radius:8px;margin-bottom:5px;font-size:14px;cursor:pointer}
+nav button.active,nav button:hover{background:#29435b;color:#55d6b3}
+main{flex:1;padding:24px;min-width:0}
+h2{margin-top:0;font-size:22px}
+.muted{color:#758197;font-size:13px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:22px 0}
+.card,.panel{background:white;border-radius:12px;padding:18px;box-shadow:0 2px 10px #1720330a}
+.card small{color:#758197}
+.number{font-size:25px;font-weight:bold;margin-top:12px}
+.green{color:#159b77}
+.blue{color:#3275d1}
+.orange{color:#d58a25}
+.panel{margin-bottom:18px}
+.panel h3{margin-top:0;font-size:17px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #dce2eb;border-radius:8px;margin:7px 0 14px;font:inherit;background:white}
+label{font-size:13px;font-weight:bold}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.btn{border:0;border-radius:8px;background:#159b77;color:white;padding:12px 18px;font-weight:bold;cursor:pointer}
+.btn.secondary{background:#e8edf4;color:#24334a}
+.btn.danger{background:#b94343}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:12px 8px;text-align:right;border-bottom:1px solid #edf0f4}
+th{color:#65748a;background:#f8fafc}
+.empty{padding:25px;text-align:center;color:#8290a3}
+.page{display:none}
+.page.active{display:block}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+footer{text-align:center;color:#8994a5;font-size:12px;padding:20px}
+@media(max-width:850px){
+.layout{display:block}
+nav{width:100%;display:flex;overflow-x:auto;padding:8px}
+nav button{min-width:115px;text-align:center;margin:0 3px}
+main{padding:15px}
+.cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:480px){
+.form-grid{grid-template-columns:1fr}
+.number{font-size:20px}
+}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand">TAKI-INFO <span>BUSINESS</span></div>
+ <p>منصة إدارة المشاريع والدراسات المالية والمحاسبية</p>
+</header>
+
+<div class="layout">
+<nav>
+ <button class="active" onclick="showPage('home',this)">⌂ لوحة التحكم</button>
+ <button onclick="showPage('projects',this)">▣ دراسات المشاريع</button>
+ <button onclick="showPage('finance',this)">◈ المحاسبة والمالية</button>
+ <button onclick="showPage('reports',this)">▤ التقارير</button>
+ <button onclick="showPage('settings',this)">⚙ الإعدادات</button>
+</nav>
+
+<main>
+<section id="home" class="page active">
+ <h2>مرحباً بك في Taki-Info Business</h2>
+ <p class="muted">لوحة القيادة العامة لمتابعة أعمالك ومشاريعك.</p>
+ <div class="cards">
+  <div class="card"><small>عدد المشاريع</small><div class="number blue" id="projectCount">0</div></div>
+  <div class="card"><small>إجمالي المداخيل</small><div class="number green" id="incomeTotal">0 دج</div></div>
+  <div class="card"><small>إجمالي المصاريف</small><div class="number orange" id="expenseTotal">0 دج</div></div>
+  <div class="card"><small>الرصيد الحالي</small><div class="number" id="balance">0 دج</div></div>
+ </div>
+ <div class="panel">
+  <h3>مركز العمل</h3>
+  <p class="muted">اختر الخدمة التي تريد العمل عليها.</p>
+  <div class="actions">
+   <button class="btn" onclick="showPage('projects',document.querySelectorAll('nav button')[1])">إنشاء دراسة مشروع</button>
+   <button class="btn secondary" onclick="showPage('finance',document.querySelectorAll('nav button')[2])">إضافة حركة مالية</button>
+  </div>
+ </div>
+ <div class="panel">
+  <h3>آخر الحركات المالية</h3>
+  <div id="recentTransactions" class="empty">لا توجد حركات مالية بعد.</div>
+ </div>
+</section>
+
+<section id="projects" class="page">
+ <h2>دراسات المشاريع</h2>
+ <p class="muted">تسجيل المشاريع ومتابعة بياناتها الأولية.</p>
+ <div class="panel">
+  <h3>إضافة مشروع جديد</h3>
+  <form id="projectForm">
+   <div class="form-grid">
+    <div><label>اسم المشروع</label><input id="pname" required placeholder="مثال: مشروع بيتزيريا"></div>
+    <div><label>صاحب المشروع</label><input id="owner" placeholder="الاسم الكامل"></div>
+    <div><label>نوع النشاط</label><input id="activity" placeholder="تجارة، صناعة، خدمات..."></div>
+    <div><label>الولاية</label><input id="wilaya" value="بسكرة"></div>
+    <div><label>تكلفة الاستثمار (دج)</label><input id="investment" type="number" min="0" value="0"></div>
+    <div><label>مصدر التمويل</label>
+     <select id="funding"><option>NESDA</option><option>تمويل ذاتي</option><option>بنك</option><option>أخرى</option></select>
+    </div>
+   </div>
+   <button class="btn" type="submit">حفظ المشروع</button>
+  </form>
+ </div>
+ <div class="panel">
+  <h3>قائمة المشاريع</h3>
+  <div id="projectList" class="empty">لم تتم إضافة أي مشروع.</div>
+ </div>
+</section>
+
+<section id="finance" class="page">
+ <h2>المحاسبة والمالية</h2>
+ <p class="muted">تسجيل المداخيل والمصاريف ومتابعة الرصيد.</p>
+ <div class="panel">
+  <h3>إضافة حركة مالية</h3>
+  <form id="financeForm">
+   <div class="form-grid">
+    <div><label>نوع الحركة</label>
+     <select id="type"><option value="income">مدخول</option><option value="expense">مصروف</option></select>
+    </div>
+    <div><label>المبلغ (دج)</label><input id="amount" type="number" min="0.01" step="0.01" required></div>
+    <div><label>البيان</label><input id="description" required placeholder="مثال: بيع خدمات أو شراء معدات"></div>
+    <div><label>التاريخ</label><input id="date" type="date" required></div>
+   </div>
+   <button class="btn" type="submit">تسجيل الحركة</button>
+  </form>
+ </div>
+ <div class="panel">
+  <h3>سجل الحركات المالية</h3>
+  <div id="transactionList" class="empty">لا توجد حركات مسجلة.</div>
+ </div>
+</section>
+
+<section id="reports" class="page">
+ <h2>التقارير المالية</h2>
+ <p class="muted">ملخص تلقائي للبيانات المسجلة في هذا المتصفح.</p>
+ <div class="cards">
+  <div class="card"><small>المداخيل</small><div class="number green" id="reportIncome">0 دج</div></div>
+  <div class="card"><small>المصاريف</small><div class="number orange" id="reportExpense">0 دج</div></div>
+  <div class="card"><small>صافي النتيجة</small><div class="number blue" id="reportNet">0 دج</div></div>
+  <div class="card"><small>المشاريع المسجلة</small><div class="number" id="reportProjects">0</div></div>
+ </div>
+ <div class="panel">
+  <h3>تصدير البيانات</h3>
+  <p class="muted">يمكنك تنزيل نسخة JSON احتياطية من بيانات التطبيق.</p>
+  <button class="btn" onclick="backup()">تنزيل النسخة الاحتياطية</button>
+ </div>
+</section>
+
+<section id="settings" class="page">
+ <h2>الإعدادات</h2>
+ <div class="panel">
+  <h3>حول البرنامج</h3>
+  <p>TAKI-INFO BUSINESS</p>
+  <p class="muted">الإصدار الأولي 0.1</p>
+  <p class="muted">برنامج تجريبي لإدارة دراسات المشاريع والبيانات المالية.</p>
+ </div>
+ <div class="panel">
+  <h3>إدارة البيانات</h3>
+  <p class="muted">احذف جميع البيانات المحلية بعد تنزيل نسخة احتياطية إذا احتجت إلى ذلك.</p>
+  <button class="btn danger" onclick="clearData()">مسح جميع البيانات</button>
+ </div>
+</section>
+<footer>TAKI-INFO BUSINESS © 2026</footer>
+</main>
+</div>
+
+<script>
+const load=(key)=>JSON.parse(localStorage.getItem(key)||'[]');
+const save=(key,data)=>localStorage.setItem(key,JSON.stringify(data));
+let projects=load('taki_projects');
+let transactions=load('taki_transactions');
+
+function money(n){
+ return new Intl.NumberFormat('ar-DZ',{maximumFractionDigits:2}).format(n)+' دج';
+}
+function showPage(id,button){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+ if(button)button.classList.add('active');
+ render();
+}
+document.getElementById('projectForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ projects.push({
+ id:Date.now(),
+ name:document.getElementById('pname').value,
+ owner:document.getElementById('owner').value,
+ activity:document.getElementById('activity').value,
+ wilaya:document.getElementById('wilaya').value,
+ investment:Number(document.getElementById('investment').value),
+ funding:document.getElementById('funding').value
+ });
+ save('taki_projects',projects);
+ e.target.reset();
+ document.getElementById('wilaya').value='بسكرة';
+ alert('تم حفظ المشروع بنجاح');
+ render();
+});
+document.getElementById('financeForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ transactions.push({
+ id:Date.now(),
+ type:document.getElementById('type').value,
+ amount:Number(document.getElementById('amount').value),
+ description:document.getElementById('description').value,
+ date:document.getElementById('date').value
+ });
+ save('taki_transactions',transactions);
+ e.target.reset();
+ document.getElementById('date').value=new Date().toISOString().slice(0,10);
+ alert('تم تسجيل الحركة المالية');
+ render();
+});
+function render(){
+ const income=transactions.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
+ const expense=transactions.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
+ document.getElementById('projectCount').textContent=projects.length;
+ document.getElementById('incomeTotal').textContent=money(income);
+ document.getElementById('expenseTotal').textContent=money(expense);
+ document.getElementById('balance').textContent=money(income-expense);
+ document.getElementById('reportIncome').textContent=money(income);
+ document.getElementById('reportExpense').textContent=money(expense);
+ document.getElementById('reportNet').textContent=money(income-expense);
+ document.getElementById('reportProjects').textContent=projects.length;
+
+ document.getElementById('projectList').innerHTML=projects.length?
+ '<table><tr><th>المشروع</th><th>النشاط</th><th>الاستثمار</th><th>التمويل</th></tr>'+
+ projects.map(p=>`<tr><td>${safe(p.name)}</td><td>${safe(p.activity)}</td><td>${money(p.investment)}</td><td>${safe(p.funding)}</td></tr>`).join('')+'</table>':
+ '<div class="empty">لم تتم إضافة أي مشروع.</div>';
+
+ const table=transactions.length?
+ '<table><tr><th>التاريخ</th><th>البيان</th><th>النوع</th><th>المبلغ</th></tr>'+
+ [...transactions].reverse().map(t=>`<tr><td>${safe(t.date)}</td><td>${safe(t.description)}</td><td>${t.type==='income'?'مدخول':'مصروف'}</td><td>${money(t.amount)}</td></tr>`).join('')+'</table>':
+ '<div class="empty">لا توجد حركات مسجلة.</div>';
+ document.getElementById('transactionList').innerHTML=table;
+ document.getElementById('recentTransactions').innerHTML=transactions.length?
+ [...transactions].slice(-5).reverse().map(t=>`<p>${safe(t.description)} — ${money(t.amount)}</p>`).join(''):
+ '<div class="empty">لا توجد حركات مالية بعد.</div>';
+}
+function safe(value){
+ return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function backup(){
+ const data={projects,transactions,exportedAt:new Date().toISOString()};
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');
+ a.href=url;a.download='taki-info-backup.json';a.click();
+ URL.revokeObjectURL(url);
+}
+function clearData(){
+ if(confirm('هل أنت متأكد؟ سيتم حذف كل المشاريع والحركات المالية من هذا المتصفح.')){
+ projects=[];transactions=[];
+ save('taki_projects',projects);save('taki_transactions',transactions);
+ render();alert('تم مسح البيانات');
+ }
+}
+document.getElementById('date').value=new Date().toISOString().slice(0,10);
+render();
+</script>
+</body>
+</html>
+
